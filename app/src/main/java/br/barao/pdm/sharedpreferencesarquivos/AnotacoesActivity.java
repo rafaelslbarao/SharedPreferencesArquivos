@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 
 import br.barao.pdm.sharedpreferencesarquivos.controladores.LoginControlador;
@@ -32,6 +33,7 @@ public class AnotacoesActivity extends AppCompatActivity
         inicializaComponentes();
         inicializaEventos();
         carregaInformacoesUsuario();
+        carregaAnotacoes();
     }
 
     @Override
@@ -81,10 +83,7 @@ public class AnotacoesActivity extends AppCompatActivity
     {
         try
         {
-            File diretorioInternoApp = context.getFilesDir();
-            File pastaDados = new File(diretorioInternoApp, "DADOS");
-            pastaDados.mkdirs();
-            File arquivoAnotacoes = new File(pastaDados, "anotacoes.txt");
+            File arquivoAnotacoes = getArquivoAnotacoes();
             //
             FileWriter fileWriter = new FileWriter(arquivoAnotacoes);
             fileWriter.write(etAnotacoes.getText().toString());
@@ -98,6 +97,29 @@ public class AnotacoesActivity extends AppCompatActivity
 
     private void carregaAnotacoes()
     {
+        try
+        {
+            File arquivoAnotacoes = getArquivoAnotacoes();
+            if(arquivoAnotacoes.exists())
+            {
+                FileReader fileReader = new FileReader(arquivoAnotacoes);
+                char[] informacoesLidas = new char[(int) arquivoAnotacoes.length()];
+                fileReader.read(informacoesLidas);
+                etAnotacoes.setText(new String(informacoesLidas));
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
 
+    private File getArquivoAnotacoes()
+    {
+        File diretorioInternoApp = context.getFilesDir();
+        File pastaDados = new File(diretorioInternoApp, "DADOS");
+        pastaDados.mkdirs();
+        File arquivoAnotacoes = new File(pastaDados, "anotacoes.txt");
+        return arquivoAnotacoes;
     }
 }
