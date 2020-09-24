@@ -3,6 +3,7 @@ package br.barao.pdm.sharedpreferencesarquivos;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -10,14 +11,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import br.barao.pdm.sharedpreferencesarquivos.controladores.LoginControlador;
+
 public class LoginActivity extends AppCompatActivity
 {
-    private static final String NOME_SHAREDPREFERENCES = "INFORMACOES_LOGIN";
-    private static final String EMAIL_KEY_SHAREDPREFERENCES = "EMAIL";
-    private static final String SENHA_KEY_SHAREDPREFERENCES = "SENHA";
-    private static final String MANTERLOGADO_KEY_SHAREDPREFERENCES = "MANTERLOGADO";
-    //
     private Context context = LoginActivity.this;
+    private LoginControlador loginControlador;
     private EditText etEmail;
     private EditText etSenha;
     private CheckBox ckManterLogado;
@@ -28,9 +27,15 @@ public class LoginActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        inicializaControladores();
         inicializaComponentes();
         inicializaEventos();
         verificaUsuarioLogado();
+    }
+
+    private void inicializaControladores()
+    {
+        loginControlador = new LoginControlador(context);
     }
 
     private void inicializaComponentes()
@@ -55,19 +60,8 @@ public class LoginActivity extends AppCompatActivity
 
     private void verificaUsuarioLogado()
     {
-        String email;
-        String senha;
-        boolean manterLogado;
-        //
-        //Realiza a abertura do arquivo que armazena em formato XML os valores (chave, valor)
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NOME_SHAREDPREFERENCES, Context.MODE_PRIVATE);
-        email = sharedPreferences.getString(EMAIL_KEY_SHAREDPREFERENCES, null);
-        senha = sharedPreferences.getString(SENHA_KEY_SHAREDPREFERENCES, null);
-        manterLogado = sharedPreferences.getBoolean(MANTERLOGADO_KEY_SHAREDPREFERENCES, false);
-        if(manterLogado)
-        {
+        if(loginControlador.existeUsuarioLogado())
             abreSegundaTela();
-        }
     }
 
     private void realizaAcesso()
@@ -77,7 +71,7 @@ public class LoginActivity extends AppCompatActivity
         if(!validaSenha())
             return;
 
-        salvaInformacoesLogin();
+        loginControlador.salvaInformacoesLogin(etEmail.getText().toString().trim(), etSenha.getText().toString(), ckManterLogado.isChecked());
         abreSegundaTela();
     }
 
@@ -103,31 +97,11 @@ public class LoginActivity extends AppCompatActivity
             return true;
     }
 
-    private void salvaInformacoesLogin()
-    {
-        String email = etEmail.getText().toString().trim();
-        String senha = etSenha.getText().toString().trim();
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NOME_SHAREDPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorSharedPreferences = sharedPreferences.edit();
-        if(ckManterLogado.isChecked())
-        {
-            editorSharedPreferences.putString(EMAIL_KEY_SHAREDPREFERENCES, email);
-            editorSharedPreferences.putString(SENHA_KEY_SHAREDPREFERENCES, senha);
-        }
-        else
-        {
-            editorSharedPreferences.remove(EMAIL_KEY_SHAREDPREFERENCES);
-            editorSharedPreferences.remove(SENHA_KEY_SHAREDPREFERENCES);
-            //Limpa e apaga todas as chaves do arquivo de sharedpreferences
-            //editorSharedPreferences.clear();
-        }
-        editorSharedPreferences.putBoolean(MANTERLOGADO_KEY_SHAREDPREFERENCES, ckManterLogado.isChecked());
-        editorSharedPreferences.commit();
-    }
 
     private void abreSegundaTela()
     {
+        startActivity(new Intent(context, AnotacoesActivity.class));
         finish();
     }
 

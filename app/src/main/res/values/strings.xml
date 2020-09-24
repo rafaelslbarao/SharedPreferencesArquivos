@@ -6,4 +6,6 @@
     <string name="Acessar">Acessar</string>
     <string name="InformeEmail">Informe o E-mail</string>
     <string name="InformeSenha">Informe a Senha</string>
+    <string name="Sair">Sair</string>
+    <string name="UsuarioLogadoParametro">Usuário Logado: %s</string>
 </resources>
