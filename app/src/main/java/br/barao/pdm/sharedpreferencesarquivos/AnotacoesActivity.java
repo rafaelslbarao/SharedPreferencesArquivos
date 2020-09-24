@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import br.barao.pdm.sharedpreferencesarquivos.controladores.LoginControlador;
 
 public class AnotacoesActivity extends AppCompatActivity
@@ -72,5 +75,29 @@ public class AnotacoesActivity extends AppCompatActivity
     private void carregaInformacoesUsuario()
     {
         tvUsuarioLogado.setText(getString(R.string.UsuarioLogadoParametro, loginControlador.getEmail()));
+    }
+
+    private void salvaAnotacoes()
+    {
+        try
+        {
+            File diretorioInternoApp = context.getFilesDir();
+            File pastaDados = new File(diretorioInternoApp, "DADOS");
+            pastaDados.mkdirs();
+            File arquivoAnotacoes = new File(pastaDados, "anotacoes.txt");
+            //
+            FileWriter fileWriter = new FileWriter(arquivoAnotacoes);
+            fileWriter.write(etAnotacoes.getText().toString());
+            fileWriter.close();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    private void carregaAnotacoes()
+    {
+
     }
 }
