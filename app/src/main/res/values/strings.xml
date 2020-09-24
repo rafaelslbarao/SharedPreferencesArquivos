@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SharedPreferencesArquivos</string>
+    <string name="Senha">Senha</string>
+    <string name="Email">E-mail</string>
+    <string name="ManterLogado">Manter Logado</string>
+    <string name="Acessar">Acessar</string>
+    <string name="InformeEmail">Informe o E-mail</string>
+    <string name="InformeSenha">Informe a Senha</string>
+</resources>
